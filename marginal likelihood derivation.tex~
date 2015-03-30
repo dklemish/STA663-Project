@@ -1,0 +1,332 @@
+\documentclass{article}
+\newcommand{\mc}[1]{\mathcal{#1}}
+\usepackage[top=0.8in, bottom=0.8in, left=0.75in, right=0.75in]{geometry}
+\usepackage{wrapfig}
+\usepackage{subcaption}
+\usepackage{graphicx}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{caption}
+
+\captionsetup{font=small, width=\linewidth}
+
+\usepackage{titlesec}
+\titleformat*{\section}{\large\bfseries}
+
+\usepackage{multicol}
+
+\newlength\tindent
+\setlength{\tindent}{\parindent}
+\setlength{\parindent}{0pt}
+\renewcommand{\indent}{\hspace*{\tindent}}
+
+\begin{document}
+\author{Dave Klemish \vspace{-5pt}}
+\title{\vspace{-50pt}STA 723: HW \#5 \vspace{-5pt}}
+
+\maketitle
+
+\section*{Executive Summary}
+Right heart catheterization is a medically invasive diagnostic procedure that 
+provides physicians information regarding the state of a patient's 
+cardiopulmonary health.  There has been debate regarding the benefits of this 
+procedure when compared to its risks.  Our analysis shows that while certain 
+patients benefit from this procedure (as measured by an increase in one 
+month probability of survival), the overall effect of this procedure is a 
+decrease in the probability of survival over a one month time frame.
+
+\section{Introduction}
+Right heart catheterization (RHC) is a medical procedure that directly 
+measures how well the heart is pumping and to measure the pressures in 
+the heart and lungs.  This procedure involves guiding a catheter to the 
+right side of the heart and then passing it into the pulmonary artery, 
+which is the main artery that carries blood to the lungs.  This 
+information can be useful in informing future treatment, although the 
+procedure itself carries risks, including infection, embolism and 
+arterial rupture.  As such, it is of interest to determine whether the 
+RHC procedure is beneficial or detrimental to patient health. \\
+
+There are two parts to this analysis.  The first part looks to predict the impact of 
+the RHC procedure on a patient's survival probability to assess whether a new patient 
+should receive RHC.  The second part of the analysis determines the average treatment 
+effect of RHC for patients.
+
+\section{Exploratory Data Analyis}
+This analysis is based on three related datasets.  The first dataset consists 
+of 3,824 observations, each corresponding to one individual patient who was hospitalized 
+at one of five medical centers in the United States.  Each observation records 
+whether that patient received RHC treatment within 24 hours of hospital admission and a
+prognosis score that estimates the probability of survival 30 days after completion of 
+treatment.  The prognosis score is calculated using a standardized procedure that is 
+the same across all patients and medical centers.  In addition, there are 52 other 
+covariates related to patient background and health included in the data.  These 
+covariates are a mix of categorical and continuous data.  This dataset is used to train 
+our predictive model. \\
+
+The second dataset contains 1,911 observations, in the same format as the first dataset, 
+although the observations are distinct between the datasets.  The only difference between 
+these two datasets is that the second dataset only contains the 52 possible explanatory 
+covariates and does not contain information on prognosis scores or whether RHC was 
+performed.  This dataset is used for prediction based on the output of our model. \\
+
+The third dataset contains 5,735 observations.  This dataset is equivalent to the 
+combination of the previous datasets, except that instead of a prognosis score, a binary 
+variable encoding whether the patient died within 30 days of completion of treatment is 
+included.  Also, the use of RHC (either yes or no) is recorded for all patients.  This 
+dataset is used to determine the average treatment effect of RHC. \\
+
+Standard EDA techniques were used to explore the data, and no data points were judged to 
+be outliers or unusual.  There is an issue with data on patient weight, in that 
+approximately 10\% of patients have missing weight information; as a result, their weight 
+was recorded as 0.  An additional dummy variable is included to flag these occurrences.  
+Some attempts were made to model weight as a function of other variables, but these 
+approaches explained only about 15\% of variability in weight across patients whose weight 
+was observed.  As such, our analysis was run using the dummy variable to account for the 
+missingness in weight.
+
+\section{Model}
+We model $y_i$, the probability of survival at 30 days after the completion 
+of treatment, for patient $i$ using the following model structure:
+\begin{align*}
+    y_i &\sim Be(\mu_i \phi, (1-\mu_i)\phi) \\
+    \mu_i &= \frac{1}{1+ \exp(-X_i'\beta)} \\
+    \beta &\sim \text{Laplace}(0, \tau) \\
+    \phi &\sim Ga(0.01, 0.01) \\
+    \tau &\sim Ga(0.01, 0.01)
+\end{align*}
+The explanatory variables $X$ include all 52 covariates included in the data, as well as 
+age$^2$ and weight$^2$ to capture possible non-linearity in the probability of survival 
+in these terms.  In addition, interactions were included between the occurrence of 
+RHC procedure with gender, age, weight, disease categories 1 and 2 and other variables 
+related to cardiac and pulmonary function.  An initial attempt was made to interact 
+RHC treatment with all other covariates, but this was computationally intractable so 
+the limited interactions above were selected.  This results in 108 total covariates, 
+including an intercept to estimate the overall average survival probability. \\
+
+Given the large number of covariates, we choose a Laplace prior for the $\beta$ 
+coefficients to encourage sparsity in the parameter estimates.  As a result, this 
+analysis can be viewed as a Bayesian LASSO for a beta GLM regression with a logit 
+link function.
+
+\section{Results}
+Samples from the posterior distribution were drawn using a MCMC approach in JAGS.  The 
+MCMC chain was run for 7,500 iterations.  Based on standard traceplot analyses, the first 
+5,000 iterations were discarded as a burn-in period.  Boxplots of the marginal posterior 
+distributions for each $\beta$ coefficient are displayed in Figure~\ref{fig:betaposterior}.
+\vspace{-15pt}
+\begin{center}
+\begin{figure}[!h]
+\centering
+	\includegraphics[scale=0.3]{BetaPosterior.png}
+	\vspace{-20pt}
+ 	\caption{$\beta$ Posterior Distributions}
+ 	\label{fig:betaposterior} 
+\end{figure}
+\end{center}
+
+Variable 2 corresponds to RHC treatment and variables 77 and above correspond to the 
+interaction of RHC with other variables.  The variables with the strongest effects on 
+the probability of surviving one month are:
+\begin{center}
+\begin{table}[!h]
+\caption{Significant covariates for 1 month survival probability}
+\centering
+\begin{tabular}{l|c|r|r|r}
+ Covariate & Variable \# & Mean & 2.5\% C.I. & 97.5\% C.I.  \\
+ \hline
+ Category 1 Colon Cancer & 18 & 1.021 & 0.571 & 1.453 \\
+ Category 1 Coma & 19 & -0.563 & -0.652 & -0.481 \\
+ Category 1 Lung Cancer & 21 & -0.548 & -0.717 & -0.368 \\
+ Category 2 Colon Cancer & 24 & 1.244 & 0.473 & 2.188 \\
+ Do not resusciate on day 1 & 41 & -0.516 & -0.558 & -0.472 \\
+ 2 Month Survival Probability & 44 & 1.251 & 1.065 & 1.445 \\
+ RHC x 2 Month Survival Probability & 82 & -0.413 & -0.628 & -0.170 \\
+ RHC x category 1 Lung Cancer & 90 & 0.941 & 0.545 & 1.361
+\end{tabular}
+\label{table:ATE}
+\end{table}
+\end{center}
+\vspace{-20pt}
+We see that colon cancer, while a dangerous disease, generally has a high probability of 
+surviving at least one month, while patients with lung cancer or in a coma have a lower 
+than average probability of survival.  With regards to RHC, we see that patients with 
+lung cancer have a much higher probability of survival if they receive the RHC procedure.
+In contrast, if a patient is relatively healthy and has a high probability of surviving two 
+months, the RHC procedure reduces that patient's probability of surviving one month. \\
+
+\begin{wrapfigure}[17]{L}{0.40\linewidth}
+	\includegraphics[width=\linewidth]{EmpVsModel.png}
+	\vspace{-10pt}
+ 	\caption{Empirical vs. Modeled Distribution}
+ 	\label{fig:validation}
+\end{wrapfigure}
+
+To validate the model, for each draw from the joint posterior, we simulate a survival 
+probability for each patient in the training dataset.  We then compare the resulting 
+distribution of survival probabilities to the empirical survival probability 
+distribution in the training dataset.  This is displayed in Figure \ref{fig:validation}, 
+where the green distribution corresponds to the modeled distribution and the orange 
+distribution corresponds to the empirical distribution.  We see that the model does a 
+good job of recovering the empirical distribution. \\
+
+Given the draws from the posterior distribution, we can compute the average probability 
+of survival for the $i^{th}$ patient both with and without receiving the RHC treatment by 
+taking that patient's covariates (first with RHC=1 and then with RHC=0) and calculating 
+$1/1+\exp(-X_i' \beta)$.  However, this only considers the average probability of one 
+month survival.  A better approach would be to simulate draws from a beta distribution for 
+that patient with parameters $\mu_i\phi$ and  $(1-\mu_i)\phi$ where $\mu$ and $\phi$ for each 
+draw come from each draw from the joint posterior distribution.  In this way, we account 
+for parameter and process uncertainty in predicting a patient's survival probability. \\
+
+\begin{figure}[!h]
+    \begin{center}
+    \includegraphics[scale=0.20]{Patient1890Posterior.png}
+	\vspace{-10pt}
+ 	\caption{Patient 1890 with and without RHC treatment}
+ 	\vspace{-10pt}
+ 	\label{fig:pat1890}
+ 	\end{center}
+\end{figure}
+
+An example of doing this is shown in Figure \ref{fig:pat1890}.  Patient 1890 is a 53 year 
+old male with lung cancer.  We see that the posterior predictive distribution of survival 
+probability with treatment (shown in green) is significantly to the right of the distribution 
+without treatment.  In approximately 95\% of draws from these two posterior predictive 
+distributions, the probability of survival with the RHC procedure is higher than without 
+receiving the RHC procedure.  This information can be provided to medical professionals who 
+can then determine whether the probability of improvement in survival probability is 
+appropriate.
+
+\newpage
+\clearpage
+\section{Average Treatment Effect}
+
+%\setlength{\intextsep}{0pt}
+\begin{wrapfigure}{r}{0.5\textwidth}
+	\centering\
+	\includegraphics[width=0.48\textwidth]{Match.png}
+	\vspace{-10pt}
+    \caption{Propensity score distribution.  The top row shows the 
+        treatment group.  The middle row shows the control group
+        using a 1-1 match without replacement.  The bottom row 
+        shows the control group using a 2-1 match with replacement.}
+ 	\label{fig:match}
+\end{wrapfigure}
+
+To determine the average treatment effect, we used a matching with 
+regression approach.  We first estimate propensity scores (i.e. the 
+probability of receiving RHC) using a logistic regression conditional 
+on all 52 covariates in the data.  Note that since we are looking for 
+the average treatment effect of RHC, we choose not to interact the 
+indicator for RHC with other variables in the dataset.  \\
+
+The first column of Figure \ref{fig:match} displays the distribution of 
+propensity score across the treatment and control populations.  The 
+treatment population corresponds to the patients that received 
+RHC, whereas the control population did not receive RHC.  We see 
+that these two distributions are significantly different from each 
+other, with the control distribution displaying a heavy right skewness, 
+indicating that the two populations are significantly different in their 
+distribution across covariates.  Therefore, it is inappropriate to just 
+consider the difference in average survival probabilities across the 
+treated and control groups, since the resulting estimate will be biased.  \\
+
+Observations between the treatment and control groups were matched by 
+selecting observations with the closest propensity scores.  We investigated 
+both a one-to-one matching without replacement as well as a two-to-one 
+matching with replacement.  Here, with and without replacement indicates 
+whether a given observation in the control group can be matched to multiple 
+records in the treatment group (with replacement) or can only be matched to 
+a single record (without replacement).  Figure \ref{fig:match} shows that 
+using the two-to-one matching allows for a much better match between the 
+propensity score distribution between the treatment and control groups.
+
+\setlength{\intextsep}{0pt}
+\begin{wrapfigure}{l!}{0.5\linewidth}
+%	\includegraphics[width=\linewidth]{BalanceBoxplot.png}
+	\includegraphics[scale=0.31]{BalanceBoxplot.png}
+	\vspace{-10pt}
+ 	\caption{Covariate balance between treatment and control groups.  Box 1 is 
+ 	raw control, box 2 is 1:1 matching and box 3 is 2:1 matching.}
+ 	\label{fig:balance}
+\end{wrapfigure}
+To further evaluate the matching, the standardized difference of the mean for 
+each covariate between the treatment and control groups were calculated.  
+Categorical variables were first converted into multiple binary variables.  
+Figure \ref{fig:balance} shows box plots of the results across all variables.  
+We again see that the 2:1 matching with replacement provides the closest match 
+across all covariates. \\
+
+While the 2:1 matching creates a control group that is best balanced to the the 
+treatment group, no record is selected for the control group which has a Category 
+1 diagnosis of colon cancer.  This prevents estimation of the average treatment 
+effect for the treated as discussed in the next section.  Therefore, the rest of 
+the analysis is done using the 1:1 matched control group.
+\clearpage
+
+\section{Average Treatment Effects}
+To estimate the overall average treatment effect (ATE), the mean survival probability of 
+the matched control group is subtracted from the mean survival probability of the 
+treatment group.  Given the groups are matched on all other covariates, the 
+underlying assumption is that the only difference remaining between the two groups 
+is whether RHC was applied or not. \\
+
+To determine the average treatment effect for the treated (ATT), a logistic regression is 
+performed using all variables with the data from the matched control group.  Predictions 
+are made for all observations in the treatment group based on the results of this model.
+In this way, we can estimate the unobserved effect of no treatment for all individuals in 
+the treatment group and thereby estimate the average treatment effect for the treated.  
+In both cases, we estimate the uncertainty in these effects via 5,000 bootstrapped 
+samples from the data. \\
+
+\begin{figure}[!h]
+\centering
+\begin{subfigure}{.5\textwidth}
+  \centering
+  \includegraphics[width=.75\linewidth]{ATT.png}
+  \caption{Average treatment effects for the treated}
+  \label{fig:ATT}
+\end{subfigure}%
+\begin{subfigure}{.5\textwidth}
+  \centering
+  \includegraphics[width=.75\linewidth]{ATE.png}
+  \caption{Average treatment effect}
+  \label{fig:ATE}
+\end{subfigure}
+\caption{}
+\label{fig:AT}
+\end{figure}
+Table \ref{table:ATE} lists the summary statistics for the bootstrapped average 
+treatment effects.  We see that the RHC procedure on average increases the 
+probability of dying by approximately 7\% for the treatment group with a 95\% 
+bootstrapped confidence interval of (3.9\%, 10.0\%).
+\begin{center}
+\begin{table}[!h]
+\caption{Summary of bootstrapped average effects}
+\centering
+\begin{tabular}{l|c|c|c}
+ & Mean & 2.5\% Percentile & 97.5\% Percentile  \\
+ \hline
+ Avg. Treatment Effect for the Treated & 0.070 & 0.039 & 0.100 \\
+ Average Treatment Effect  & 0.077 & 0.049 & 0.104
+\end{tabular}
+\label{table:ATE}
+\end{table}
+\end{center}
+
+\section{Conclusion}
+Based upon the analysis of the average treatment effect, we find that the RHC procedure is 
+detrimental to the overall population of patient health for the patients in this study.  
+Patients in the study who receive RHC have 7\% higher probability of death than if they 
+would not have received RHC.  However, this effect varies depending on each patient's 
+individual situation.  \\
+
+We estimate that patients with lung cancer who receive RHC have their log odds of 
+surviving one month increase by 0.941.  However, patients with a high probability of 
+surviving two months are on average harmed by RHC, since the log odds of surviving 
+for these patients decreases by 0.413 times their two month probability of survival.  
+Therefore, while RHC may benefit some patients, it should only be used when warranted.  
+Given the output of our analysis, it is possible to estimate the probability that 
+a patient's survival probability will increase by undergoing the RHC procedure, which 
+may prove beneficial to treating physicians.
+\end{document}
