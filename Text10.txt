@@ -1,0 +1,63 @@
+If you are new to computer programming, it is easy to become overwhelmed by the sheer number of programming languages to choose from as you start your career.
+
+Of the 20 or more commonly used programming languages, which one(s) should you learn first? The Break into the Programming Business course gives you a complete run-down of what you need to succeed in the programming world; even if you have no programming experience at all!
+
+Job opportunities are often dictated by skills in particular programming languages such as Java, .NET, C (and variants such as C #and Objective-C). It quickly becomes apparent that choosing a programming language should not be a hasty decision.
+
+Sure – you can always pick up additional languages after you’ve gained experience but landing that first job as a programmer requires careful selection to keep as many opportunities open as possible.
+
+Two of the most popular and powerful programming languages currently used are Python and C. Although C has been largely replaced by successors such as C++ and C #, this guide will focus on C specifically (although many traits of C are also inherent to its subsets).
+
+Once you have a better understanding of each development platform, you should be well-equipped to formulate a training plan that maximizes your chances for success in the highly competitive, but very exciting, programming environment.
+
+Originally introduced in 1991, Python is a general-purpose, high-level programming language. The syntax emphasizes code readability by allowing programmers to use 10% of the code required by other languages, such as C.
+
+Python is often used as a scripting language, but is also extremely effective as a standalone program. Using software such as Py2exe, you can write applications entirely in Python before packaging them into executable programs.
+
+Scripting languages allow for interactive and dynamic functionality via web-based applications.  You can learn more about using Python on the web in the Web Programming with Python course.
+
+Many students enrolled in standard programming curriculums still start by learning a procedural and statically typed language. Examples include C, Pascal, or Java. There are certainly good reasons to learn these static languages, but from a beginner standpoint Python lets you focus on other skills without worrying too much about syntax.
+
+As a Python student, you can spend most of your time focusing on problem decomposition and data type design. These are important components of programming in any language; Python just lets you get there more quickly.
+
+Similar to Java, Python’s large standard library allows students to create functional programs almost immediately. Other programming languages may require a level of experience in creating custom APIs prior to creating software that provides any real value.
+
+Python’s interactive interpreter allows you to test features while programming. This is a real breakthrough because you can see what a particular code snippet does in real time and modify it for desired results without the need for compilation.
+
+First developed in 1969 at AT&T Bell Labs, C is also considered a general-purpose programming language. Unlike Python, however, C is not a dynamic language easily adapted to script programming.
+
+C remains the most widely used programming language of all time and it has seen much standardization and improvement throughout the years. It is also the forefather of powerful supersets including C++ and Objective-C. In case you aren’t aware, applications for Apple’s iOS are written exclusively in Objective-C.
+
+What sets this programming language apart is that it was designed for low-level memory management tasks that had previously been written in Assembly language (code written in hexadecimal format that accesses memory locations directly).
+
+For this reason, it is still used extensively in operating system architecture. Systems including UNIX (and Linux derivatives) rely on C for many functions. The static nature of this programming language helps prevent unintended operations. The drawback to such a rigid design is that as a new programmer, you may find it difficult to master quickly.
+
+Using C, powerful applications and even entire Operating Systems can be created efficiently.  If you have any interest in writing applications for the popular iOS platform, you should check out C Programming for Beginners.  This course teaches C to complete beginners; allowing you to move on to Objective-C and possible App store fame as you create your very own iOS apps.
+
+So is one of these programming languages the better choice when you first start out as a computer programmer? The answer is – well, there isn’t one!
+
+That is to say, the answer depends on your individual goals and job opportunities in your area. A quick look through a job board will give you a very good idea of what programming skills are in demand in your area.
+
+If you are lucky enough to know someone already in the programming field, they can give you some very good information about what skills are most marketable in this economy.
+
+Most successful computer programmers are fluent in many languages. Hopefully, that is also your goal. That said, Python has a much shorter learning curve and will have you creating meaningful programs in a short period of time.
+
+Once you have mastered Python, transitioning to C will not be nearly as hard. Although there are quite a view syntax differences between the two languages, the object oriented concepts learned in Python will apply equally as well to C or any other programming language you choose to learn in the future.
+
+As far as performance (of written programs) is concerned, both languages have areas where they shine. If you plan on writing highly processor intensive applications such as video editing software or 3-D graphics software, the built-in memory management functionality of Python will simply fall short of the performance gains attainable with C.
+
+As a dynamic language, Python has built-in memory management that works very well in most instances. However, high-end programs are going to require salvaging every spare kilobyte possible – a feat only achievable with C or similar languages with efficient mapping to typical machine instructions.
+
+Even though most experts will agree that C is approximately 10 times faster during run time, the speed difference is hardly noticeable for most applications.
+
+Furthermore, C does not have a case selection library. This means you have to write a custom function that is probably not going to be nearly as efficient as the built-in case selection library inherent to Python.
+
+Python and C are both powerful programming languages that can be used for a variety of programming tasks. Each has benefits and drawbacks (as do all programming languages) and these are both skills you should add to your repertoire as a successful computer programmer.
+
+Although there will be exceptions, Python is an excellent place to start because of its short learning curve and powerful functionality.  You can be creating functional and useful programs with Python in just a few days!
+
+Its flexibility as a web-based solution or standalone application makes it a very marketable skill in this demanding and competitive economy.  If you are completely new to Python, The Ultimate Python Programming Tutorial explains basic concepts and uses real-world examples to teach Python quickly and correctly.
+
+Once you have mastered Python, transitioning to the C environment will seem much more natural. In fact, there is a course designed specifically for people with experience in one other programming language. Learn C the Hard Way skips the basics that are inherent to all programming languages (you already know them from Python) and you will be programming C properly in no time.
+
+Take your time, build something useful, and above all – have fun doing it!
