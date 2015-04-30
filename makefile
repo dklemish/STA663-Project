@@ -1,9 +1,10 @@
-.PHONY: all clean
+.PHONY: all
 
-all: make_pictures report.pdf
+all: make_pictures report.pdf clean
 
 make_pictures:
-	python -m cProfile -o profile_results.txt -s tottime main.py
+	python main.py
+#	python -m cProfile -o profile_results.txt -s tottime main.py
 
 report.pdf: 
 	pdflatex report
@@ -11,4 +12,4 @@ report.pdf:
 	pdflatex report
 
 clean:
-	rm -f *.aux *.log *.png *.pyc
+	rm -f *aux *log *png

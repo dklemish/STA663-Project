@@ -157,9 +157,8 @@ For comparison purposes, Scipy's hierarchical clustering algorithm is run using 
 The results here are not as successful at clustering "similar" (from a human understanding perspective) documents than the BHC algorithm.  The image here is somewhat distorted by the distance between Huckleberry Finn and the other documents, but one of the clusters identified by the algorithm includes the Duke Biostatistics department, an article on penguins, one article on pythons (the snake) and one article on the Python programming language.
 
 \section{Optimization}
-The results of running \%prun in an IPython version of this program are displayed below.  The makefile also dumps a full function
-profile into a separate \texttt{profile\_results} file, but I wasn't able to limit the display to only a small number of functions, 
-so I used \%prun instead.
+The results of running \%prun in an IPython version of this program are displayed below.  The makefile has a line commented out that dumps a full function
+profile into a separate \texttt{profile\_results} file, but I wasn't able to either limit the display to only a small number of functions or be in a readable format, so I used \%prun instead.
 \begin{verbatim}
     7153303 function calls in 24.991 seconds
         Ordered by: internal time
