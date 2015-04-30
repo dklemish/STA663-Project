@@ -1,9 +1,11 @@
 SHELL := /bin/bash
 
-.PHONY: testing clean
+.PHONY: all 
+
+all: testing clean
 
 testing:
 	nosetests
 
 clean:
-	rm *.pyc *.py~
+	rm -f *.pyc *.py~ 
