@@ -33,8 +33,9 @@ class clusterNode:
 
 		
 def merge_nodes(c1, c2, alp, log_beta_fac, r, new_ID):
-    x_k = c1.x + c2.x
-    n_k = c1.n + c2.n
+    ### Merges nodes together and combines data appropriately
+    x_k = c1.x + c2.x  # New word counts = sum of word counts
+    n_k = c1.n + c2.n  # New observations = sum of observations
     
     # Note: log(a+b) = log(a) + log(1+exp(log(b)-log(a))) if a > b
     temp1 = math.log(alp) + math.lgamma(n_k) 
@@ -61,6 +62,9 @@ def merge_nodes(c1, c2, alp, log_beta_fac, r, new_ID):
 
 					   
 def calc_probability(c1, c2, alp, log_beta_fac):
+    ### Calculates the r_k from Heller, the probability that clusters 
+    ### c1 and c2 should be merged together, given hyperparameters 
+    ### alpha and beta
     temp_node = merge_nodes(c1, c2, alp, log_beta_fac, r=0, new_ID=-1)
     logpi_k = temp_node.logpi
     logll   = temp_node.ll
@@ -143,8 +147,6 @@ def BHCmultinomial(texts, alpha, beta):
                     
                 r_k = R[(clust[i].ID,clust[j].ID)]
 
-                #print (clust[i].ID,clust[j].ID), r_k
-                
                 if r_k > closest:
                     closest = r_k
                     lowestpair = (i,j)
@@ -210,8 +212,6 @@ def draw_dendrogram(clust,cutoff,jpeg='clusters.png'):
 
 def draw_node(draw,clust,cutoff,x,y,scaling,img):
     if clust.ID<0:
-        #h1=getheight(clust.left)*20
-        #h2=getheight(clust.right)*20
         h1=getheight(clust.left)*50
         h2=getheight(clust.right)*50
         top=y-(h1+h2)/2

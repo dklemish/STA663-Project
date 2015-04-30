@@ -11,4 +11,4 @@ clusters.png:
 all: report.pdf
 
 clean:
-	rm -f *csv *aux *log *png *pytxcode
+	rm -f *.aux *.log *.png
