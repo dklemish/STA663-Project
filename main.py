@@ -20,8 +20,8 @@ texts = [open('Data/Text1.txt','r').read().replace('\r\n',''),
          open('Data/Text12.txt','r').read().replace('\r\n',''),
          open('Data/Text13.txt','r').read().replace('\r\n',''),
          open('Data/Text14.txt','r').read().replace('\r\n',''),
-         open('Data/Text15.txt','r').read().replace('\r\n',''),
-         open('Data/Text16.txt','r').read().replace('\r\n','')]
+         open('Data/Text15.txt','r').read().replace('\r\n','')]
+#         open('Data/Text16.txt','r').read().replace('\r\n','')]
 
 #results = bhc.BHCmultinomial(texts, 1, 1)
 

@@ -1,14 +1,14 @@
-report.pdf: report.tex clusters.png
-	pdflatex report
-	pdflatex report
-	pdflatex report
-
-clusters.png: 
-	python main.py
-
 .PHONY: all clean
 
-all: report.pdf
+all: make_pictures report.pdf
+
+make_pictures:
+	python -m cProfile -o profile_results.txt -s tottime main.py
+
+report.pdf: 
+	pdflatex report
+	pdflatex report
+	pdflatex report
 
 clean:
-	rm -f *.aux *.log *.png
+	rm -f *.aux *.log *.png *.pyc
