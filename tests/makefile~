@@ -1,0 +1,6 @@
+SHELL := /bin/bash
+
+.PHONY: testing
+
+testing:
+	nosetests

@@ -1,3 +1,6 @@
+import sys
+sys.path.insert(0, '/home/bitnami/STA663-Project')
+
 import bhc
 import math
 import numpy as np
